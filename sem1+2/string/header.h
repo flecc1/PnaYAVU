@@ -10,13 +10,15 @@
 #define COLOR_RESET "\x1b[0m"
 
 #include <iostream>
-#include <string.h>
+#include <cstring>
+#include<string.h>
 using namespace std;
 
 class String
 {
     char *str;
     int size;
+    char o = '\0';
 
 public:
     String()
@@ -43,7 +45,7 @@ public:
     String(const String &obj)
     {
         size = obj.size;
-        str = new char[size + 1];
+        str = new char[size + 1];   
         for (int i = 0; i < obj.size; i++)
         {
             str[i] = obj.str[i];
@@ -55,9 +57,14 @@ public:
     friend ostream &operator<<(ostream &out, const String &str);
     String operator+(const String &other);
     String& operator+=(const String& other);
+    String& operator++();
+    String& operator--();
     String operator()(int start, int end);
     bool operator<(const String& other) const;
     bool operator>(const String& other) const;
     bool operator==(const String& other) const;
+    char& operator[](int ind);
+    int getSize() const { return size; }
 };
+void menu();
 #endif

@@ -1,0 +1,7 @@
+./cpp/komis.cpp
+./cpp/student.cpp
+./cpp/human.cpp
+./cpp/main2.cpp
+./cpp/prepod.cpp
+./cpp/prepod_komis.cpp
+./cpp/main.cpp

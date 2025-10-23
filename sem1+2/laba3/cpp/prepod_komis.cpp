@@ -54,3 +54,4 @@ void Prepod_Komis::printHeader()
         << setw(15) << left << "Komisiya"
         << setw(20) << left << "Autobio" 
         << setw(20) << left << "Spisok_rabot" << endl;
+}
