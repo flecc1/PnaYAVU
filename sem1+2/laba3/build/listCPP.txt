@@ -4,4 +4,3 @@
 ./cpp/main2.cpp
 ./cpp/prepod.cpp
 ./cpp/prepod_komis.cpp
-./cpp/main.cpp

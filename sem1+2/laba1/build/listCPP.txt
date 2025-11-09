@@ -1,0 +1,2 @@
+./func.cpp
+./laba1.cpp

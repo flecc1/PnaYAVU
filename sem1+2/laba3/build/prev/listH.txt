@@ -1,0 +1,5 @@
+./headers/prepod.h
+./headers/human.h
+./headers/prepod_komis.h
+./headers/komis.h
+./headers/student.h
