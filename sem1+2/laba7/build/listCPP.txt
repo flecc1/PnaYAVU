@@ -1,0 +1,10 @@
+./cpp/my_func.cpp
+./cpp/error.cpp
+./cpp/komis.cpp
+./cpp/student.cpp
+./cpp/human.cpp
+./cpp/excep.cpp
+./cpp/excep_vvoda.cpp
+./cpp/main2.cpp
+./cpp/prepod.cpp
+./cpp/prepod_komis.cpp
