@@ -1,0 +1,8 @@
+./headers/ComputingMachine.h
+./headers/Interface.h
+./headers/Laptop.h
+./headers/LinkedList.h
+./headers/Monoblock.h
+./headers/Portable.h
+./headers/StationaryMachine.h
+./headers/Tablet.h

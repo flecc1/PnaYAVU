@@ -14,9 +14,9 @@ class Human
     public:
     Human()
     {
-        strcpy(name, "");
-        strcpy(second_name, "");
-        age = 0;
+        name[0] = '\0';
+        second_name[0] = '\0';
+        age = -1;
     }
     Human(const char* fname, const char *sname, int let)
     {
@@ -47,6 +47,7 @@ class Human
     void set_second_name(const char* new_second_name);
 
     Human& operator=(const Human& other);
+    bool operator==(const Human &other);
     friend istream &operator>>(istream &in, Human &obj);
     friend ostream &operator<<(ostream &out, const Human &obj);
     virtual void printHeader();

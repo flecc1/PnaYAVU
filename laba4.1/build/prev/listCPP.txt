@@ -1,0 +1,7 @@
+./src/ComputingMachine.cpp
+./src/Laptop.cpp
+./src/main.cpp
+./src/Monoblock.cpp
+./src/Portable.cpp
+./src/StationaryMachine.cpp
+./src/Tablet.cpp

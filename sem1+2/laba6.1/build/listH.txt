@@ -1,0 +1,13 @@
+./headers/excep_vvoda.h
+./headers/prepod.h
+./headers/file.h
+./headers/file_txt.h
+./headers/file_bin.h
+./headers/node.h
+./headers/human.h
+./headers/interface.h
+./headers/prepod_komis.h
+./headers/ochered.h
+./headers/excep.h
+./headers/komis.h
+./headers/student.h

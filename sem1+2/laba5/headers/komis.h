@@ -10,8 +10,8 @@ class Komisia:virtual public Human
     public:
     Komisia():Human()
     {
-        strcpy(komis_name, "");
-        strcpy(autobio, "");
+        komis_name[0] = '\0';
+        autobio[0] = '\0';
     }
     Komisia(const char* name, const char* sname, int age, const char* komis_name, const char* autobio):Human(name, sname, age)
     {
@@ -39,6 +39,7 @@ class Komisia:virtual public Human
     friend istream &operator>>(istream &in, Komisia &obj);
     friend ostream &operator<<(ostream &out, Komisia &obj);
     Komisia& operator=(const Komisia& other);
+    bool operator==(const Komisia &other);
 
     void printHeader() override;
     void edit() override;

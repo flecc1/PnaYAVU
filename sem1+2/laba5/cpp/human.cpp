@@ -32,12 +32,8 @@ void Human::set_name(const char *new_name)
         throw Exp_vvoda(12, "EMPTY_INPUT", "Имя не может быть пустым");
     }
 
-    string name_str(new_name);
-    if (!isEnglishText(name_str)) 
-    {
-        throw Exp_vvoda(13, "LANGUAGE_ERROR", "Имя должно содержать только английские буквы");
-    }
-
+    // Проверка на английские символы теперь в методах исключений
+    // Убираем isEnglishText проверку здесь, так как она уже сделана в inputName
     strncpy(this->name, new_name, N - 1);
     this->name[N - 1] = '\0';
 }
@@ -48,11 +44,7 @@ void Human::set_second_name(const char *new_second_name)
     {
         throw Exp_vvoda(14, "EMPTY_INPUT", "Фамилия не может быть пустой");
     }
-    string sname_str(new_second_name);
-    if (!isEnglishText(sname_str)) 
-    {
-        throw Exp_vvoda(15, "LANGUAGE_ERROR", "Фамилия должна содержать только английские буквы");
-    }
+    // Проверка на английские символы теперь в методах исключений
     strncpy(this->second_name, new_second_name, N - 1);
     this->second_name[N - 1] = '\0';
 }
@@ -73,25 +65,24 @@ Human& Human::operator=(const Human &other)
 
 istream &operator>>(istream &in, Human &obj)
 {
-    // Ввод имени с повторением при ошибке
-
-            clearInputBuffer();
-            cout << "Введите имя: ";
-            string name = readName();
-            obj.set_name(name.c_str());
-
-            cout << "Введите фамилию: ";
-            string sname = readSurname();
-            obj.set_second_name(sname.c_str());
-
-
+    // Создаем объекты исключений для использования методов
+    Exp_vvoda stringValidator;
+    Exp_vvoda numValidator;
     
-    // Ввод возраста с повторением при ошибке
-
-            cout << "Введите возраст: ";
-            int age = inputNumber(0, 100);
-            obj.set_age(age);
-
+    // Ввод имени - цикл внутри метода исключения
+    cout << "Введите имя: ";
+    string name = stringValidator.inputName(in);
+    obj.set_name(name.c_str());
+    
+    // Ввод фамилии - цикл внутри метода исключения  
+    cout << "Введите фамилию: ";
+    string sname = stringValidator.inputSurname(in);
+    obj.set_second_name(sname.c_str());
+    
+    // Ввод возраста - цикл внутри метода исключения
+    cout << "Введите возраст: ";
+    int age = numValidator.inputNumber(in, 0, 100);
+    obj.set_age(age);
     
     return in;
 }
@@ -104,6 +95,22 @@ ostream &operator<<(ostream &out, const Human &obj)
     return out;
 }
 
+bool Human::operator==(const Human &other)
+{
+    // Если в шаблоне поиска возраст установлен (не 0), то сравниваем
+    if (other.age != -1 && this->age != other.age)
+        return false;
+
+    // Если в шаблоне поиска имя установлено (не пустая строка), то сравниваем
+    if (other.name[0] != '\0' && strcmp(this->name, other.name) != 0)
+        return false;
+        
+    // Если в шаблоне поиска фамилия установлена (не пустая строка), то сравниваем  
+    if (other.second_name[0] != '\0' && strcmp(this->second_name, other.second_name) != 0)
+        return false;
+
+    return true;
+}
 void Human::printHeader()
 {
     cout << setw(12) << left << "Name" 
@@ -112,53 +119,48 @@ void Human::printHeader()
 }
 
 void Human::edit() {
-    int fieldChoice;
+    int choice;
+    Exp_vvoda numValidator;
+    Exp_vvoda stringValidator;
+    
     do {
-        cout << "\n=== РЕДАКТИРОВАНИЕ HUMAN ===" << endl;
-        cout << "Текущий объект:" << endl;
-        printHeader();
-        cout << *this << endl;
+        cout << "1. set name" << endl;
+        cout << "2. set second name" << endl;
+        cout << "3. set age" << endl;
+        cout << "0. skip" << endl;
+        cout << "your choice: ";
         
-        cout << "\nВыберите поле для изменения:" << endl;
-        cout << "1. Имя" << endl;
-        cout << "2. Фамилия" << endl;
-        cout << "3. Возраст" << endl;
-        cout << "0. Назад" << endl;
-        cout << "Выберите поле: ";
+        choice = numValidator.inputNumber(cin, 0, 3);
         
-        try {
-            fieldChoice = inputNumber(0, 3);
-            
-            switch(fieldChoice) {
-                case 1: {
-                    clearInputBuffer();
-                    string newName = readName();
-                    set_name(newName.c_str());
-                    cout << "Имя изменено!" << endl;
-                    break;
-                }
-                case 2: {
-                    clearInputBuffer();
-                    string newSurname = readSurname();
-                    set_second_name(newSurname.c_str());
-                    cout << "Фамилия изменена!" << endl;
-                    break;
-                }
-                case 3: {
-                    int newAge = inputNumber(0, 100);
-                    set_age(newAge);
-                    cout << "Возраст изменен!" << endl;
-                    break;
-                }
-                case 0:
-                    cout << "Выход из редактора..." << endl;
-                    break;
+        switch(choice) {
+            case 1: {
+                cout << "Enter name: ";
+                string name = stringValidator.inputName();
+                set_name(name.c_str());
+                cout << "name editing" << endl;
+                break;
             }
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе: ";
-            e.printError();
-            fieldChoice = -1;
+            case 2: {
+                cout << "Enter second name: ";
+                string second_name = stringValidator.inputSurname();
+                set_second_name(second_name.c_str());
+                cout << "second name editing" << endl;
+                break;
+            }
+            case 3: {
+                cout << "Enter age: ";
+                int age = numValidator.inputNumber(cin, 0, 100);
+                set_age(age);
+                cout << "age editing" << endl;
+                break;
+            }
+            case 0: {
+                break;
+            }
+            default: {
+                cout << "error choice" << endl;
+                break;
+            }
         }
-        
-    } while (fieldChoice != 0);
+    } while (choice != 0);
 }

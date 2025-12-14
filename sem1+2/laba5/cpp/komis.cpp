@@ -36,34 +36,16 @@ istream &operator>>(istream &in, Komisia &obj)
     // Сначала вводим базовые данные Human
     in >> static_cast<Human&>(obj);
     
-    // Ввод названия комиссии с повторением при ошибке
-    while (true) {
-        try {
-            clearInputBuffer();
-            cout << "Введите имя комиссии: ";
-            string komis = readString("");
-            obj.set_komis_name(komis.c_str());
-            break;
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе названия комиссии: ";
-            e.printError();
-            cout << "Повторите ввод." << endl;
-        }
-    }
+    // Создаем объект исключения для использования методов
+    Exp_vvoda validator;
     
-    // Ввод автобиографии с повторением при ошибке
-    while (true) {
-        try {
-            cout << "Введите автобиографию: ";
-            string bio = readString("");
-            obj.set_autobio(bio.c_str());
-            break;
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе автобиографии: ";
-            e.printError();
-            cout << "Повторите ввод." << endl;
-        }
-    }
+    // Ввод названия комиссии - цикл внутри метода исключения
+    string komis = validator.inputString("Введите имя комиссии: ", in);
+    obj.set_komis_name(komis.c_str());
+    
+    // Ввод автобиографии - цикл внутри метода исключения
+    string bio = validator.inputString("Введите автобиографию: ", in);
+    obj.set_autobio(bio.c_str());
     
     return in;
 }
@@ -97,69 +79,55 @@ void Komisia::printHeader()
         << setw(20) << left << "Autobio" << endl;
 }
 
+bool Komisia::operator==(const Komisia &other)
+{
+    if (!(static_cast<Human &>(*this) == static_cast<Human &>(const_cast<Komisia &>(other))))
+        return false;
+
+    if (other.autobio[0] != '\0' && strcmp(this->autobio, other.autobio) != 0)
+        return false;
+    if (other.komis_name[0] != '\0' && strcmp(this->komis_name, other.komis_name) != 0)
+        return false;
+
+    return true;
+}
+
 void Komisia::edit() {
-    int fieldChoice;
+    Human::edit();  // Вызываем edit родительского класса
+    int choice;
+    Exp_vvoda numValidator;
+    Exp_vvoda validator;
+    
     do {
-        cout << "\n=== РЕДАКТИРОВАНИЕ KOMISIA ===" << endl;
-        cout << "Текущий объект:" << endl;
-        printHeader();
-        cout << *this << endl;
+        cout << "1. set commission name" << endl;
+        cout << "2. set autobiography" << endl;
+        cout << "0. skip" << endl;
+        cout << "your choice: ";
         
-        cout << "\nВыберите поле для изменения:" << endl;
-        cout << "1. Имя" << endl;
-        cout << "2. Фамилия" << endl;
-        cout << "3. Возраст" << endl;
-        cout << "4. Название комиссии" << endl;
-        cout << "5. Автобиография" << endl;
-        cout << "0. Назад" << endl;
-        cout << "Выберите поле: ";
+        choice = numValidator.inputNumber(cin, 0, 2);
         
-        try {
-            fieldChoice = inputNumber(0, 5);
-            
-            switch(fieldChoice) {
-                case 1: {
-                    clearInputBuffer();
-                    string newName = readName();
-                    set_name(newName.c_str());
-                    cout << "Имя изменено!" << endl;
-                    break;
-                }
-                case 2: {
-                    clearInputBuffer();
-                    string newSurname = readSurname();
-                    set_second_name(newSurname.c_str());
-                    cout << "Фамилия изменена!" << endl;
-                    break;
-                }
-                case 3: {
-                    int newAge = inputNumber(0, 100);
-                    set_age(newAge);
-                    cout << "Возраст изменен!" << endl;
-                    break;
-                }
-                case 4: {
-                    clearInputBuffer();
-                    string newKomis = readString("Новое название комиссии: ");
-                    set_komis_name(newKomis.c_str());
-                    cout << "Название комиссии изменено!" << endl;
-                    break;
-                }
-                case 5: {
-                    clearInputBuffer();
-                    string newBio = readString("Новая автобиография: ");
-                    set_autobio(newBio.c_str());
-                    cout << "Автобиография изменена!" << endl;
-                    break;
-                }
-                case 0:
-                    cout << "Выход из редактора..." << endl;
-                    break;
+        switch(choice) {
+            case 1: {
+                cout << "Enter commission name: ";
+                string komis_name = validator.inputString("новая комисия: ");
+                set_komis_name(komis_name.c_str());
+                cout << "commission name editing" << endl;
+                break;
             }
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе: ";
-            e.printError();
-            fieldChoice = -1;
+            case 2: {
+                cout << "Enter autobiography: ";
+                string autobio = validator.inputString("новая автобиография: ");
+                set_autobio(autobio.c_str());
+                cout << "autobiography editing" << endl;
+                break;
+            }
+            case 0: {
+                break;
+            }
+            default: {
+                cout << "error choice" << endl;
+                break;
+            }
         }
-    } while (fieldChoice != 0);
+    } while (choice != 0);
 }

@@ -10,6 +10,9 @@ template<class T>
 void Interface<T>::menu()
 {
     int choice;
+    // Создаем объект исключения для использования методов
+    Exp_vvoda validator;
+    
     do
     {
         Interface<Human> humanobj;
@@ -25,33 +28,27 @@ void Interface<T>::menu()
         cout << "5. Работа с преподавателями членами комиссии" << endl;
         cout << "0. Выход" << std::endl;
 
-        try {
-            choice = inputNumber(0, 5);
+        choice = validator.inputNumber(cin, 0, 5);
             
-            switch (choice)
-            {
-                case 0:
-                    break;
-                case 1:
-                    humanobj.fun();
-                    break;
-                case 2:
-                    studentobj.fun();
-                    break;
-                case 3:
-                    komisobj.fun();
-                    break;
-                case 4:
-                    prepodobj.fun();
-                    break;
-                case 5:
-                    prepod_komisobj.fun();
-                    break;
-            }
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка в меню: ";
-            e.printError();
-            choice = -1;
+        switch (choice)
+        {
+            case 0:
+                break;
+            case 1:
+                humanobj.fun();
+                break;
+            case 2:
+                studentobj.fun();
+                break;
+            case 3:
+                komisobj.fun();
+                break;
+            case 4:
+                prepodobj.fun();
+                break;
+            case 5:
+                prepod_komisobj.fun();
+                break;
         }
     } while (choice != 0);
 }
@@ -72,9 +69,12 @@ template <class T>
 void Interface<T>::fun()
 {
     int choice;
+    // Создаем объект исключения для использования методов
+    Exp_vvoda validator;
+    
     do
     {
-        cout << "=========================================" << endl;
+        cout << endl;
         cout << "1. Добавить объект" << endl;
         cout << "2. Показать все объекты" << endl;
         cout << "3. Редактирование параметров" << endl;
@@ -82,121 +82,119 @@ void Interface<T>::fun()
         cout << "5. Сортировка" << endl;
         cout << "6. Очистить список" << endl;
         cout << "7. Показать размер списка" << endl;
+        cout << "8. Поиск" << endl;
         cout << "0. Назад" << endl;
-        cout << "=========================================" << endl;
         cout << "Выберите действие: ";
 
-        try {
-            choice = inputNumber(0, 7);
-
-            switch (choice)
+        choice = validator.inputNumber(cin, 0, 8);
+        switch (choice)
+        {
+        case 1:
+        {
+            T obj;
+            cin >> obj;  
+            och.pushback(obj);
+            cout << "Объект добавлен!" << endl;
+            break;
+        }
+        case 2:
+        {
+            if (och.is_empty()) 
             {
-            case 1:
+                cout << "Список пуст!" << endl;
+            } 
+            else 
             {
-                try {
-                    T obj;
-                    cin >> obj;
-                    och.pushback(obj);
-                    cout << "Объект добавлен!" << endl;
-                } catch (Exp_vvoda& e) {
-                    cout << "Ошибка при создании объекта: ";
-                    e.printError();
-                }
-                break;
-            }
-            case 2:
-            {
-                if (och.is_empty()) 
-                {
-                    cout << "Список пуст!" << endl;
-                } 
-                else 
-                {
-                    cout << "\n=== СПИСОК ОБЪЕКТОВ ===" << endl;
-                    T temp;
-                    temp.printHeader();
-                    cout << och << endl;
-                }
-                break;
-            }
-            case 3:
-            {
-                if (och.is_empty()) 
-                {
-                    cout << "Нет объектов для редактирования!" << endl;
-                    break;
-                }
-                
-                cout << "\nТекущий список:" << endl;
+                cout << "\n=== СПИСОК ОБЪЕКТОВ ===" << endl;
                 T temp;
                 temp.printHeader();
                 cout << och << endl;
-                
-                int index;
-                cout << "Введите индекс для редактирования (1-" << och.getSize() << "): ";
-                index = inputNumber(1, och.getSize());
-                
-                try {
-                    och[index - 1].edit();
-                    cout << "Объект отредактирован!" << endl;
-                } catch (Exp_vvoda& e) {
-                    cout << "Ошибка при редактировании: ";
-                    e.printError();
-                }
-                break;
             }
-            case 4:
+            break;
+        }
+        case 3:
+        {
+            if (och.is_empty()) 
             {
-                if (och.is_empty()) 
-                {
-                    cout << "Список пуст!" << endl;
-                    break;
-                }
-                
-                cout << "\nТекущий список:" << endl;
-                T temp;
-                temp.printHeader();
-                cout << och << endl;
-                
-                int index;
-                cout << "Введите индекс для удаления (1-" << och.getSize() << "): ";
-                index = inputNumber(1, och.getSize());
-                
-                och.remove_by_index(index - 1);
-                cout << "Объект удален!" << endl;
+                cout << "Нет объектов для редактирования!" << endl;
                 break;
             }
-            case 5:
+            
+            cout << "\nТекущий список:" << endl;
+            T temp;
+            temp.printHeader();
+            cout << och << endl;
+            
+            int index;
+            cout << "Введите индекс для редактирования (1-" << och.getSize() << "): ";
+            index = validator.inputNumber(cin, 1, och.getSize());
+            
+            och[index - 1].edit();
+            cout << "Объект отредактирован!" << endl;
+            break;
+        }
+        case 4:
+        {
+            if (och.is_empty()) 
             {
-                if (och.is_empty()) 
-                {
-                    cout << "Список пуст!" << endl;
-                }
-                else
-                {
-                    och.sortByAge();
-                    cout << "Список отсортирован!" << endl;
-                }
+                cout << "Список пуст!" << endl;
                 break;
             }
-            case 6:
+            
+            cout << "\nТекущий список:" << endl;
+            T temp;
+            temp.printHeader();
+            cout << och << endl;
+            
+            int index;
+            cout << "Введите индекс для удаления (1-" << och.getSize() << "): ";
+            index = validator.inputNumber(cin, 1, och.getSize());
+            
+            och.remove_by_index(index - 1);
+            cout << "Объект удален!" << endl;
+            break;
+        }
+        case 5:
+        {
+            if (och.is_empty()) 
             {
-                och.free();
-                cout << "Список очищен!" << endl;
-                break;
+                cout << "Список пуст!" << endl;
             }
-            case 7:
+            else
             {
-                cout << "Размер списка: " << och.getSize() << " элементов" << endl;
-                break;
+                och.sortByAge();
+                cout << "Список отсортирован!" << endl;
             }
-            case 0:
-                break;
+            break;
+        }
+        case 6:
+        {
+            och.free();
+            cout << "Список очищен!" << endl;
+            break;
+        }
+        case 7:
+        {
+            cout << "Размер списка: " << och.getSize() << " элементов" << endl;
+            break;
+        }
+        case 8:
+        {
+            T value;
+            cout << "Enter parametrs" << endl;
+            value.edit();
+            Ochered<T> findResult = och.findAllWithParameters(value);
+            if (!findResult.is_empty())
+            {
+                findResult[0].printHeader();
+                cout << findResult;
             }
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе: ";
-            e.printError();
-            choice = -1;
+            else
+                cout << "No elements found" << endl;
+            break;
+        }
+        case 0:
+            break;
         }
     } while (choice != 0);
 }

@@ -31,34 +31,21 @@ int Student::get_stependiya()const
 
 istream& operator>>(istream &in, Student &obj)
 {
+    // Сначала вводим базовые данные Human
     in >> static_cast<Human&>(obj);
     
-    while (true) {
-        try {
-            cout << "Введите средний балл: ";
-            double bal = inputDouble(0.0, 10.0);
-            obj.set_sr_bal(bal);
-            break;
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе среднего балла: ";
-            e.printError();
-            cout << "Повторите ввод." << endl;
-        }
-    }
+    // Создаем объект исключения для использования методов
+    Exp_vvoda validator;
     
-    // Ввод стипендии с повторением при ошибке
-    while (true) {
-        try {
-            cout << "Введите стипендию: ";
-            int step = inputNumber(0, 100000);
-            obj.set_stependiya(step);
-            break;
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе стипендии: ";
-            e.printError();
-            cout << "Повторите ввод." << endl;
-        }
-    }
+    // Ввод среднего балла - цикл внутри метода исключения
+    cout << "Введите средний балл: ";
+    double bal = validator.inputDouble(in, 0.0, 10.0);
+    obj.set_sr_bal(bal);
+    
+    // Ввод стипендии - цикл внутри метода исключения
+    cout << "Введите стипендию: ";
+    int step = validator.inputNumber(in, 0, 100000);
+    obj.set_stependiya(step);
     
     return in;
 }
@@ -81,6 +68,22 @@ Student& Student::operator=(const Student &other)
     return *this;
 }
 
+bool Student::operator==(const Student &other)
+{
+    if (!(static_cast<Human &>(*this) == static_cast<Human &>(const_cast<Student &>(other))))
+        return false;
+
+    // Если в шаблоне поиска средний балл установлен (не 0.0), то сравниваем
+    if (other.sr_bal != -1 && this->sr_bal != other.sr_bal)
+        return false;
+        
+    // Если в шаблоне поиска стипендия установлена (не -1), то сравниваем
+    if (other.stependiya != -1 && this->stependiya != other.stependiya)
+        return false;
+
+    return true;
+}
+
 void Student::printHeader() 
 {
     cout << setw(12) << left << "Name" 
@@ -91,66 +94,42 @@ void Student::printHeader()
 }
 
 void Student::edit() {
-    int fieldChoice;
+    Human::edit();  // Вызываем edit родительского класса
+    int choice;
+    Exp_vvoda numValidator;
+    
     do {
-        cout << "\n=== РЕДАКТИРОВАНИЕ STUDENT ===" << endl;
-        cout << "Текущий объект:" << endl;
-        printHeader();
-        cout << *this << endl;
+        cout << "1. set average score" << endl;
+        cout << "2. set scholarship" << endl;
+        cout << "0. skip" << endl;
+        cout << "your choice: ";
         
-        cout << "\nВыберите поле для изменения:" << endl;
-        cout << "1. Имя" << endl;
-        cout << "2. Фамилия" << endl;
-        cout << "3. Возраст" << endl;
-        cout << "4. Средний балл" << endl;
-        cout << "5. Стипендия" << endl;
-        cout << "0. Назад" << endl;
-        cout << "Выберите поле: ";
+        choice = numValidator.inputNumber(cin, 0, 2);
         
-        try {
-            fieldChoice = inputNumber(0, 5);
-            
-            switch(fieldChoice) {
-                case 1: {
-                    clearInputBuffer();
-                    string newName = readName();
-                    set_name(newName.c_str());
-                    cout << "Имя изменено!" << endl;
-                    break;
-                }
-                case 2: {
-                    clearInputBuffer();
-                    string newSurname = readSurname();
-                    set_second_name(newSurname.c_str());
-                    cout << "Фамилия изменена!" << endl;
-                    break;
-                }
-                case 3: {
-                    int newAge = inputNumber(0, 100);
-                    set_age(newAge);
-                    cout << "Возраст изменен!" << endl;
-                    break;
-                }
-                case 4: {
-                    double newBal = inputDouble(0.0, 10.0);
-                    set_sr_bal(newBal);
-                    cout << "Средний балл изменен!" << endl;
-                    break;
-                }
-                case 5: {
-                    int newStep = inputNumber(0, 100000);
-                    set_stependiya(newStep);
-                    cout << "Стипендия изменена!" << endl;
-                    break;
-                }
-                case 0:
-                    cout << "Выход из редактора..." << endl;
-                    break;
+        switch(choice) {
+            case 1: {
+                cout << "Enter average score: ";
+                double sr_bal;
+                sr_bal = numValidator.inputDouble(cin, 0.0, 10.0);
+                set_sr_bal(sr_bal);
+                cout << "average score editing" << endl;
+                break;
             }
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе: ";
-            e.printError();
-            fieldChoice = -1;
+            case 2: {
+                cout << "Enter scholarship: ";
+                int stependiya;
+                stependiya = numValidator.inputNumber(cin, 0, 100000);
+                set_stependiya(stependiya);
+                cout << "scholarship editing" << endl;
+                break;
+            }
+            case 0: {
+                break;
+            }
+            default: {
+                cout << "error choice" << endl;
+                break;
+            }
         }
-    } while (fieldChoice != 0);
+    } while (choice != 0);
 }

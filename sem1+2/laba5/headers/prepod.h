@@ -12,9 +12,9 @@ class Prepod:virtual public Human
     public:
     Prepod():Human()
     {
-        strcpy(dolgnost, "");
-        strcpy(specialnost, "");
-        strcpy(truds, "");
+        dolgnost[0] = '\0';
+        specialnost[0] = '\0';
+        truds[0] = '\0';
     }
     Prepod(const char* name, const char* sname, int age, const char* dolgnost, const char* specialnost, const char* truds):Human(name, sname, age)
     {
@@ -49,6 +49,7 @@ class Prepod:virtual public Human
     friend istream &operator>>(istream &in, Prepod &obj);
     friend ostream &operator<<(ostream &out, Prepod &obj);
     Prepod& operator=(const Prepod& other);
+    bool operator==(const Prepod &other);
 
     void printHeader() override;
     void edit() override;

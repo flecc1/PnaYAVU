@@ -51,48 +51,20 @@ istream& operator>>(istream& in, Prepod&obj)
     // Сначала вводим базовые данные Human
     in >> static_cast<Human&>(obj);
     
-    // Ввод должности с повторением при ошибке
-    while (true) {
-        try {
-            clearInputBuffer();
-            cout << "Введите название должности: ";
-            string dolg = readString("");
-            obj.set_dolgnost(dolg.c_str());
-            break;
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе должности: ";
-            e.printError();
-            cout << "Повторите ввод." << endl;
-        }
-    }
+    // Создаем объект исключения для использования методов
+    Exp_vvoda validator;
     
-    // Ввод специальности с повторением при ошибке
-    while (true) {
-        try {
-            cout << "Введите название специальности: ";
-            string spec = readString("");
-            obj.set_specialnost(spec.c_str());
-            break;
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе специальности: ";
-            e.printError();
-            cout << "Повторите ввод." << endl;
-        }
-    }
+    // Ввод должности - цикл внутри метода исключения
+    string dolg = validator.inputString("Введите название должности: ", in);
+    obj.set_dolgnost(dolg.c_str());
     
-    // Ввод списка трудов с повторением при ошибке
-    while (true) {
-        try {
-            cout << "Введите список трудов: ";
-            string truds = readString("");
-            obj.set_truds(truds.c_str());
-            break;
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе списка трудов: ";
-            e.printError();
-            cout << "Повторите ввод." << endl;
-        }
-    }
+    // Ввод специальности - цикл внутри метода исключения
+    string spec = validator.inputString("Введите название специальности: ", in);
+    obj.set_specialnost(spec.c_str());
+    
+    // Ввод списка трудов - цикл внутри метода исключения
+    string truds = validator.inputString("Введите список трудов: ", in);
+    obj.set_truds(truds.c_str());
     
     return in;
 }
@@ -104,6 +76,20 @@ ostream& operator<<(ostream& out, Prepod& obj)
         << setw(15) << left << obj.specialnost 
         << setw(15) << left << obj.truds;
     return out;
+}
+
+
+bool Prepod::operator==(const Prepod &other)   
+{
+    if (!(static_cast<Human &>(*this) == static_cast<Human &>(const_cast<Prepod &>(other))))
+        return false;
+    if (other.dolgnost[0] != '\0' && strcmp(this->dolgnost, other.dolgnost) != 0)
+        return false;
+    if (other.specialnost[0] != '\0' && strcmp(this->specialnost, other.specialnost) != 0)
+        return false;
+    if (other.truds[0] != '\0' && strcmp(this->truds, other.truds) != 0)
+        return false;
+    return true;
 }
 
 Prepod& Prepod::operator=(const Prepod& other)
@@ -132,76 +118,49 @@ void Prepod::printHeader()
 }
 
 void Prepod::edit() {
-    int fieldChoice;
+    Human::edit();  // Вызываем edit родительского класса
+    int choice;
+    Exp_vvoda numValidator;
+    Exp_vvoda validator;
+    
     do {
-        cout << "\n=== РЕДАКТИРОВАНИЕ PREPOD ===" << endl;
-        cout << "Текущий объект:" << endl;
-        printHeader();
-        cout << *this << endl;
+        cout << "1. set position" << endl;
+        cout << "2. set specialty" << endl;
+        cout << "3. set list of works" << endl;
+        cout << "0. skip" << endl;
+        cout << "your choice: ";
         
-        cout << "\nВыберите поле для изменения:" << endl;
-        cout << "1. Имя" << endl;
-        cout << "2. Фамилия" << endl;
-        cout << "3. Возраст" << endl;
-        cout << "4. Должность" << endl;
-        cout << "5. Специальность" << endl;
-        cout << "6. Список трудов" << endl;
-        cout << "0. Назад" << endl;
-        cout << "Выберите поле: ";
+        choice = numValidator.inputNumber(cin, 0, 3);
         
-        try {
-            fieldChoice = inputNumber(0, 6);
-            
-            switch(fieldChoice) {
-                case 1: {
-                    clearInputBuffer();
-                    string newName = readName();
-                    set_name(newName.c_str());
-                    cout << "Имя изменено!" << endl;
-                    break;
-                }
-                case 2: {
-                    clearInputBuffer();
-                    string newSurname = readSurname();
-                    set_second_name(newSurname.c_str());
-                    cout << "Фамилия изменена!" << endl;
-                    break;
-                }
-                case 3: {
-                    int newAge = inputNumber(0, 100);
-                    set_age(newAge);
-                    cout << "Возраст изменен!" << endl;
-                    break;
-                }
-                case 4: {
-                    clearInputBuffer();
-                    string newDolg = readString("Новая должность: ");
-                    set_dolgnost(newDolg.c_str());
-                    cout << "Должность изменена!" << endl;
-                    break;
-                }
-                case 5: {
-                    clearInputBuffer();
-                    string newSpec = readString("Новая специальность: ");
-                    set_specialnost(newSpec.c_str());
-                    cout << "Специальность изменена!" << endl;
-                    break;
-                }
-                case 6: {
-                    clearInputBuffer();
-                    string newTruds = readString("Новый список трудов: ");
-                    set_truds(newTruds.c_str());
-                    cout << "Список трудов изменен!" << endl;
-                    break;
-                }
-                case 0:
-                    cout << "Выход из редактора..." << endl;
-                    break;
+        switch(choice) {
+            case 1: {
+                cout << "Enter position: ";
+                string dolgnost = validator.inputString("новая должность: ");
+                set_dolgnost(dolgnost.c_str());
+                cout << "position editing" << endl;
+                break;
             }
-        } catch (Exp_vvoda& e) {
-            cout << "Ошибка при вводе: ";
-            e.printError();
-            fieldChoice = -1;
+            case 2: {
+                cout << "Enter specialty: ";
+                string specialnost = validator.inputString("новая специальность: ");
+                set_specialnost(specialnost.c_str());
+                cout << "specialty editing" << endl;
+                break;
+            }
+            case 3: {
+                cout << "Enter list of works: ";
+                string truds = validator.inputString("новый список трудов: ");
+                set_truds(truds.c_str());
+                cout << "list of works editing" << endl;
+                break;
+            }
+            case 0: {
+                break;
+            }
+            default: {
+                cout << "error choice" << endl;
+                break;
+            }
         }
-    } while (fieldChoice != 0);
+    } while (choice != 0);
 }

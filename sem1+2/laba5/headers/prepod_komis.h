@@ -10,7 +10,7 @@ class Prepod_Komis:public Prepod, public Komisia
     public:
     Prepod_Komis():Prepod(), Komisia()
     {
-        strcpy(spisok_rabot, "");
+        spisok_rabot[0] = '\0';
     }
     Prepod_Komis(const char* name, const char* sname, int age, 
         const char* dolgnost, const char* specialnost, const char* truds, 
@@ -37,6 +37,7 @@ class Prepod_Komis:public Prepod, public Komisia
     friend istream &operator>>(istream& in, Prepod_Komis &obj);
     friend ostream &operator<<(ostream& out, Prepod_Komis &obj);
     Prepod_Komis& operator=(const Prepod_Komis& other);
+    bool operator==(const Prepod_Komis& other);
     void printHeader() override;
     void edit() override;
 

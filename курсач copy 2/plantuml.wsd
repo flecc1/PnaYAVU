@@ -1,0 +1,173 @@
+@startuml Example
+testdot
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+
+class LibraryItem {
+  - title: string
+  - author: string
+  - year: int
+  - genre: string
+  - availableCopies: int
+  - price: double
+  
+  + LibraryItem()
+  + LibraryItem(title: string, author: string, year: int, genre: string, availableCopies: int, price: double)
+  + LibraryItem(other: LibraryItem&)
+  + ~LibraryItem()
+  
+  + getTitle(): string
+  + getAuthor(): string
+  + getYear(): int
+  + getGenre(): string
+  + getAvailableCopies(): int
+  + getPrice(): double
+  
+  + setTitle(title: string): void
+  + setAuthor(author: string): void
+  + setYear(year: int): void
+  + setGenre(genre: string): void
+  + setAvailableCopies(copies: int): void
+  + setPrice(price: double): void
+  
+  + friend operator>>(in: istream&, obj: LibraryItem&): istream&
+  + friend operator<<(out: ostream&, obj: LibraryItem&): ostream&
+  + operator=(other: LibraryItem&): LibraryItem&
+}
+
+class Book {
+  - pages: int
+  - isbn: string
+  - publisher: string
+  
+  + Book()
+  + Book(title: string, author: string, year: int, genre: string, availableCopies: int, price: double, pages: int, isbn: string, publisher: string)
+  + Book(other: Book&)
+  + ~Book()
+  
+  + getPages(): int
+  + getIsbn(): string
+  + getPublisher(): string
+  
+  + setPages(pages: int): void
+  + setIsbn(isbn: string): void
+  + setPublisher(publisher: string): void
+  
+  + friend operator>>(in: istream&, obj: Book&): istream&
+  + friend operator<<(out: ostream&, obj: Book&): ostream&
+  + operator=(other: Book&): Book&
+}
+
+class AudioMaterial {
+  - duration: int
+  - format: string
+  
+  + AudioMaterial()
+  + AudioMaterial(title: string, author: string, year: int, genre: string, availableCopies: int, price: double, duration: int, format: string)
+  + AudioMaterial(other: AudioMaterial&)
+  + ~AudioMaterial()
+  
+  + getDuration(): int
+  + getFormat(): string
+  
+  + setDuration(duration: int): void
+  + setFormat(format: string): void
+  
+  + friend operator>>(in: istream&, obj: AudioMaterial&): istream&
+  + friend operator<<(out: ostream&, obj: AudioMaterial&): ostream&
+  + operator=(other: AudioMaterial&): AudioMaterial&
+}
+
+class StandardBook {
+  - coverType: string
+  - hasEbook: bool
+  
+  + StandardBook()
+  + StandardBook(title: string, author: string, year: int, genre: string, availableCopies: int, price: double, pages: int, isbn: string, publisher: string, coverType: string, hasEbook: bool)
+  + StandardBook(other: StandardBook&)
+  + ~StandardBook()
+  
+  + getCoverType(): string
+  + getHasEbook(): bool
+  
+  + setCoverType(coverType: string): void
+  + setHasEbook(hasEbook: bool): void
+  
+  + friend operator>>(in: istream&, obj: StandardBook&): istream&
+  + friend operator<<(out: ostream&, obj: StandardBook&): ostream&
+  + operator=(other: StandardBook&): StandardBook&
+}
+
+class ResearchPaper {
+  - field: string
+  - isReviewed: bool
+  - citations: int
+  
+  + ResearchPaper()
+  + ResearchPaper(title: string, author: string, year: int, genre: string, availableCopies: int, price: double, pages: int, isbn: string, publisher: string, field: string, isReviewed: bool, citations: int)
+  + ResearchPaper(other: ResearchPaper&)
+  + ~ResearchPaper()
+  
+  + getField(): string
+  + getIsReviewed(): bool
+  + getCitations(): int
+  
+  + setField(field: string): void
+  + setIsReviewed(isReviewed: bool): void
+  + setCitations(citations: int): void
+  
+  + friend operator>>(in: istream&, obj: ResearchPaper&): istream&
+  + friend operator<<(out: ostream&, obj: ResearchPaper&): ostream&
+  + operator=(other: ResearchPaper&): ResearchPaper&
+}
+
+class AudioBook {
+  - chapters: int
+  - narrator: string
+  
+  + AudioBook()
+  + AudioBook(title: string, author: string, year: int, genre: string, availableCopies: int, price: double, duration: int, format: string, chapters: int, narrator: string)
+  + AudioBook(other: AudioBook&)
+  + ~AudioBook()
+  
+  + getChapters(): int
+  + getNarrator(): string
+  
+  + setChapters(chapters: int): void
+  + setNarrator(narrator: string): void
+  
+  + friend operator>>(in: istream&, obj: AudioBook&): istream&
+  + friend operator<<(out: ostream&, obj: AudioBook&): ostream&
+  + operator=(other: AudioBook&): AudioBook&
+}
+
+class EducationalAudio {
+  - instructor: string
+  - subject: string
+  
+  + EducationalAudio()
+  + EducationalAudio(title: string, author: string, year: int, genre: string, availableCopies: int, price: double, duration: int, format: string, instructor: string, subject: string)
+  + EducationalAudio(other: EducationalAudio&)
+  + ~EducationalAudio()
+  
+  + getInstructor(): string
+  + getSubject(): string
+  
+  + setInstructor(instructor: string): void
+  + setSubject(subject: string): void
+  
+  + friend operator>>(in: istream&, obj: EducationalAudio&): istream&
+  + friend operator<<(out: ostream&, obj: EducationalAudio&): ostream&
+  + operator=(other: EducationalAudio&): EducationalAudio&
+}
+
+LibraryItem <|-- Book
+LibraryItem <|-- AudioMaterial
+
+Book <|-- StandardBook
+Book <|-- ResearchPaper
+
+AudioMaterial <|-- AudioBook
+AudioMaterial <|-- EducationalAudio
+
+@enduml

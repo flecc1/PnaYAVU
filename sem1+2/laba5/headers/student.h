@@ -9,8 +9,8 @@ class Student:public Human
     public:
     Student():Human()
     {
-        sr_bal = 0.0;
-        stependiya = 0;
+        sr_bal = -1;
+        stependiya = -1;
     }
     Student(const char* name, const char* sname, int age, double sr_bal, int stependiya):Human(name, sname, age)
     {
@@ -34,6 +34,7 @@ class Student:public Human
     friend istream& operator>>(istream&in, Student &obj);
     friend ostream& operator<<(ostream& out, Student &obj);
     Student& operator=(const Student &other);
+    bool operator==(const Student &other);
     void printHeader() override;
     void edit() override;
 };
