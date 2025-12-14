@@ -41,6 +41,8 @@ public:
     virtual ~My_exception(){}
     
     virtual void printError()const;
+    const char* getMessage() const { return message; }
+    int getErrorCode() const { return error_code; }
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "../headers/file_bin.h"
 #include "../headers/excep.h"
+#include "../headers/file_exception.h"
 #include <fstream>
 
 template<class T>
@@ -10,7 +11,9 @@ void File_bin<T>::write(Ochered<T>& data) {
     try {
         ofstream out(this->filename, ios::binary);
         if (!out.is_open()) {
-            throw My_exception(110, "Не удалось открыть файл для записи");
+            throw FileException(110, "FILE_OPEN_ERROR", 
+                "Не удалось открыть файл для записи", 
+                this->filename.c_str(), "write");
         }
         
         int size = data.getSize();
@@ -22,14 +25,20 @@ void File_bin<T>::write(Ochered<T>& data) {
         }
         
         if (!out.good()) {
-            throw My_exception(111, "Ошибка при записи в файл");
+            throw FileException(111, "FILE_WRITE_ERROR", 
+                "Ошибка при записи в файл", 
+                this->filename.c_str(), "write");
         }
         
         out.close();
-    } catch (const My_exception& e) {
+    } catch (const FileException& e) {
         throw;
+    } catch (const My_exception& e) {
+        throw FileException(112, "FILE_WRITE_ERROR", e.getMessage(), 
+            this->filename.c_str(), "write");
     } catch (const exception& e) {
-        throw My_exception(112, e.what());
+        throw FileException(112, "FILE_WRITE_ERROR", e.what(), 
+            this->filename.c_str(), "write");
     }
 }
 
@@ -40,14 +49,18 @@ Ochered<T> File_bin<T>::read() {
         ifstream in(this->filename, ios::binary);
         
         if (!in.is_open()) {
-            throw My_exception(113, "Не удалось открыть файл для чтения");
+            throw FileException(113, "FILE_OPEN_ERROR", 
+                "Не удалось открыть файл для чтения", 
+                this->filename.c_str(), "read");
         }
         
         int size;
         in.read(reinterpret_cast<char*>(&size), sizeof(size));
         
         if (!in.good()) {
-            throw My_exception(114, "Ошибка при чтении размера данных");
+            throw FileException(114, "FILE_READ_ERROR", 
+                "Ошибка при чтении размера данных", 
+                this->filename.c_str(), "read");
         }
         
         for (int i = 0; i < size; i++) {
@@ -55,7 +68,9 @@ Ochered<T> File_bin<T>::read() {
             in.read(reinterpret_cast<char*>(&obj), sizeof(obj));
             
             if (!in.good() && i < size - 1) {
-                throw My_exception(115, "Ошибка при чтении данных");
+                throw FileException(115, "FILE_READ_ERROR", 
+                    ("Ошибка при чтении данных (элемент " + to_string(i) + ")").c_str(), 
+                    this->filename.c_str(), "read");
             }
             
             result.pushback(obj);
@@ -63,10 +78,14 @@ Ochered<T> File_bin<T>::read() {
         
         in.close();
         return result;
-    } catch (const My_exception& e) {
+    } catch (const FileException& e) {
         throw;
+    } catch (const My_exception& e) {
+        throw FileException(116, "FILE_READ_ERROR", e.getMessage(), 
+            this->filename.c_str(), "read");
     } catch (const exception& e) {
-        throw My_exception(116, e.what());
+        throw FileException(116, "FILE_READ_ERROR", e.what(), 
+            this->filename.c_str(), "read");
     }
 }
 
@@ -75,7 +94,9 @@ void File_bin<T>::display() {
     try {
         ifstream in(this->filename, ios::binary | ios::ate);
         if (!in.is_open()) {
-            throw My_exception(117, "Не удалось открыть файл для просмотра");
+            throw FileException(117, "FILE_OPEN_ERROR", 
+                "Не удалось открыть файл для просмотра", 
+                this->filename.c_str(), "display");
         }
         
         streamsize size = in.tellg();
@@ -86,10 +107,14 @@ void File_bin<T>::display() {
         cout << "Для просмотра содержимого используйте hex-редактор" << endl;
         
         in.close();
-    } catch (const My_exception& e) {
+    } catch (const FileException& e) {
         throw;
+    } catch (const My_exception& e) {
+        throw FileException(118, "FILE_DISPLAY_ERROR", e.getMessage(), 
+            this->filename.c_str(), "display");
     } catch (const exception& e) {
-        throw My_exception(118, e.what());
+        throw FileException(118, "FILE_DISPLAY_ERROR", e.what(), 
+            this->filename.c_str(), "display");
     }
 }
 

@@ -10,26 +10,7 @@
 #include <iostream>
 
 using namespace std;
-
-/**
- * @brief Функция для повторного запуска программы
- * @return 1 если пользователь хочет продолжить, 0 если выйти
- */
-int restart()
-{
-    int again;
-    cout << "\nСнова? Да - 1. Нет - 0:\t";
-    
-    // Создаем объект исключения для использования методов
-    Exp_vvoda validator;
-    again = validator.inputNumber(cin, 0, 1);
-    return again;
-}
-
-/**
- * @brief Главная функция программы
- * @return Код завершения программы
- */
+int restart();
 int main() 
 {
     Interface<LibraryItem> app;

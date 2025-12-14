@@ -1,4 +1,6 @@
 ./cpp/AudioMaterial.cpp
+./cpp/my_func.cpp
+./cpp/file_exception.cpp
 ./cpp/LibraryItem.cpp
 ./cpp/excep.cpp
 ./cpp/Review.cpp

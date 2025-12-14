@@ -1,4 +1,5 @@
 ./headers/Book.h
+./headers/file_exception.h
 ./headers/excep_vvoda.h
 ./headers/LibraryItem.h
 ./headers/file.h
