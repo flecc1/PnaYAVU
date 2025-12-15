@@ -5,14 +5,6 @@
 #include "LibraryItem.h"
 #include <iomanip>
 
-/**
- * @class AudioMaterial
- * @brief Класс аудиоматериала, наследуется от LibraryItem
- * 
- * Представляет аудиоматериал с характеристиками:
- * длительность в минутах и формат аудиофайла.
- * Является базовым классом для различных типов аудиоматериалов.
- */
 class AudioMaterial : public LibraryItem
 {
 protected:

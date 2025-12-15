@@ -5,14 +5,7 @@
 #include "AudioMaterial.h"
 #include <iomanip>
 
-/**
- * @class EducationalAudio
- * @brief Класс образовательного аудиоматериала, наследуется от AudioMaterial
- * 
- * Представляет образовательный аудиокурс или лекцию с характеристиками:
- * имя преподавателя/инструктора и предмет/дисциплина.
- * Наследует все свойства аудиоматериала и добавляет образовательную специфику.
- */
+
 class EducationalAudio : public AudioMaterial
 {
     string instructor;

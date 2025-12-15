@@ -5,14 +5,6 @@
 #include "AudioMaterial.h"
 #include <iomanip>
 
-/**
- * @class AudioBook
- * @brief Класс аудиокниги, наследуется от AudioMaterial
- * 
- * Представляет аудиокнигу с дополнительными характеристиками:
- * количество глав и имя диктора/чтеца.
- * Наследует все свойства аудиоматериала и добавляет специфичные для аудиокниг поля.
- */
 class AudioBook : public AudioMaterial
 {
     int chapters;
