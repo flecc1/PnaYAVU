@@ -35,4 +35,5 @@ public:
     double inputDouble(istream& in, double minVal, double maxVal) const;
 };
 
+
 #endif

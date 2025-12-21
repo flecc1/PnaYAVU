@@ -152,6 +152,34 @@ string Exp_vvoda::inputString(const char* prompt, istream& in) const
     }
 }
 
+string Exp_vvoda::inputFilename(const char* prompt, istream& in) const
+{
+    string input;
+    while (true) {
+        try {
+            if (in.peek() == '\n') {
+                in.ignore();
+            }
+            if (prompt && strlen(prompt) > 0) {
+                cout << prompt;
+            }
+            getline(in, input);
+            if (input.empty() || input.find_first_not_of(' ') == string::npos) {
+                throw Exp_vvoda(40, "EMPTY_INPUT", "Имя файла не может быть пустым");
+            }
+            // Trim trailing/leading spaces
+            size_t start = input.find_first_not_of(' ');
+            size_t end = input.find_last_not_of(' ');
+            if (start == string::npos) input = ""; else input = input.substr(start, end - start + 1);
+            return input;
+        } catch (Exp_vvoda &e) {
+            cout << "Ошибка при вводе имени файла: ";
+            e.printError();
+            if (prompt && strlen(prompt) > 0) cout << prompt;
+        }
+    }
+}
+
 int Exp_vvoda::inputNumber(istream& in, int minVal, int maxVal) const
 {
     int num;

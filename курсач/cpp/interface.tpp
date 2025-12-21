@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <map>
 #include <algorithm>
+#include "../headers/algorithms.h"
 
 template<class T>
 void Interface<T>::menu()
@@ -75,7 +76,7 @@ void Interface<T>::menu()
 template<class T>
 void Interface<T>::sortByYear()
 {
-    och.sortByYear();
+    ::sortByYear(och.begin(), och.end());
 }
 
 template <class T>
@@ -226,7 +227,7 @@ void Interface<T>::fun()
             else
             {
                 saveState();  // Сохраняем состояние перед сортировкой
-                och.sortByYear();
+                    ::sortByYear(och.begin(), och.end());
                 cout << "Список отсортирован!" << endl;
             }
             break;
@@ -252,7 +253,7 @@ void Interface<T>::fun()
             T value;
             cout << "Введите параметры для поиска" << endl;
             value.edit();
-            Ochered<T> findResult = och.findAllWithParameters(value);
+            Ochered<T> findResult = findWithAllParameters(och.begin(), och.end(), value);
             if (!findResult.is_empty())
             {
                 cout << "\n=== РЕЗУЛЬТАТЫ ПОИСКА ===" << endl;
@@ -272,7 +273,7 @@ void Interface<T>::fun()
                 if (saveChoice == 1) {
                     string filename;
                     cout << "\nВведите имя файла (например: search_result.txt): ";
-                    getline(cin, filename);
+                    filename = validator.inputFilename("Введите имя файла (например: search_result.txt): ", cin);
                     if (!filename.empty()) {
                         try {
                             File_txt<T> file(filename);
@@ -286,7 +287,7 @@ void Interface<T>::fun()
                 } else if (saveChoice == 2) {
                     string filename;
                     cout << "\nВведите имя файла (например: search_result.bin): ";
-                    getline(cin, filename);
+                    filename = validator.inputFilename("Введите имя файла (например: search_result.bin): ", cin);
                     if (!filename.empty()) {
                         try {
                             File_bin<T> file(filename);
@@ -308,7 +309,7 @@ void Interface<T>::fun()
             string filename;
             cout << "\n=== СОХРАНЕНИЕ В ТЕКСТОВЫЙ ФАЙЛ ===" << endl;
             cout << "Введите имя файла (например: data.txt): ";
-            getline(cin, filename);
+            filename = validator.inputFilename("Введите имя файла (например: data.txt): ", cin);
             if (!filename.empty()) {
                 try {
                     File_txt<T> file(filename);
@@ -326,7 +327,7 @@ void Interface<T>::fun()
             string filename;
             cout << "\n=== СОХРАНЕНИЕ В БИНАРНЫЙ ФАЙЛ ===" << endl;
             cout << "Введите имя файла (например: data.bin): ";
-            getline(cin, filename);
+            filename = validator.inputFilename("Введите имя файла (например: data.bin): ", cin);
             if (!filename.empty()) {
                 try {
                     File_bin<T> file(filename);
@@ -345,7 +346,7 @@ void Interface<T>::fun()
             cout << "\n=== ЗАГРУЗКА ИЗ ТЕКСТОВОГО ФАЙЛА ===" << endl;
             cout << "Внимание: текущие данные будут заменены!" << endl;
             cout << "Введите имя файла (например: data.txt): ";
-            getline(cin, filename);
+            filename = validator.inputFilename("Введите имя файла (например: data.txt): ", cin);
             if (!filename.empty()) {
                 try {
                     saveState();  // Сохраняем состояние перед загрузкой
@@ -369,7 +370,7 @@ void Interface<T>::fun()
             cout << "\n=== ЗАГРУЗКА ИЗ БИНАРНОГО ФАЙЛА ===" << endl;
             cout << "Внимание: текущие данные будут заменены!" << endl;
             cout << "Введите имя файла (например: data.bin): ";
-            getline(cin, filename);
+            filename = validator.inputFilename("Введите имя файла: ", cin);
             if (!filename.empty()) {
                 try {
                     saveState();  // Сохраняем состояние перед загрузкой

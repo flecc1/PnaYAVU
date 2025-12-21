@@ -21,6 +21,12 @@ public:
         
     public:
         Iterator(Node<T>* node);
+        // Типы, ожидаемые стандартными алгоритмами/iterator_traits
+        using value_type = T;
+        using reference = T&;
+        using pointer = T*;
+        using difference_type = std::ptrdiff_t;
+        using iterator_category = std::forward_iterator_tag;
         
         // Префиксный инкремент
         Iterator& operator++();

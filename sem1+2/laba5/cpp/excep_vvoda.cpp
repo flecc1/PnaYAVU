@@ -29,7 +29,7 @@ string Exp_vvoda::inputName(istream& in) const
                     }
                 }
             }
-            
+            // лишнее
             // Проверка на запрещенные символы
             for (char c : input) {
                 if (!isalpha(c) && c != ' ' && c != '-' && c != '\'') {
@@ -122,16 +122,18 @@ int Exp_vvoda::inputNumber(istream& in, int minVal, int maxVal) const
     int num;
     while (true) {
         try {
+            /*
             if (in.peek() == '\n') {
                 throw My_exception(32, "Ошибка ввода! нельзя ничего не ввести");
             }
             if (in.peek() == ' ') {
                 throw My_exception(33, "Ошибка ввода! нельзя ввести пробел");
             }
+            */
             if (!(in >> num) || in.peek() != '\n') {
                 throw My_exception(30, "Ошибка ввода! Введите целое число");
             }
-
+            
             if (num < minVal || num > maxVal) {
                 throw My_exception(31, ("Число вне диапазона! Допустимо " + to_string(minVal) + "-" + to_string(maxVal)).c_str());
             }

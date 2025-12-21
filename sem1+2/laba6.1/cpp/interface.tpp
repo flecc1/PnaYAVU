@@ -5,6 +5,8 @@
 #include "../headers/komis.h"
 #include "../headers/prepod_komis.h"
 #include "error.cpp"
+// file exception
+#include "../headers/file_exception.h"
 
 template<class T>
 void Interface<T>::menu()
@@ -222,7 +224,7 @@ void Interface<T>::fun()
                     File_txt<T> file(filename);
                     file.write(och);
                     cout << "✓ Данные успешно сохранены в текстовый файл!" << endl;
-                } catch (const My_exception& e) {
+                } catch (const File_exception& e) {
                     cout << "✗ Ошибка при сохранении в текстовый файл: ";
                     e.printError();
                 }
@@ -240,7 +242,7 @@ void Interface<T>::fun()
                     File_bin<T> file(filename);
                     file.write(och);
                     cout << "✓ Данные успешно сохранены в бинарный файл!" << endl;
-                } catch (const My_exception& e) {
+                } catch (const File_exception& e) {
                     cout << "✗ Ошибка при сохранении в бинарный файл: ";
                     e.printError();
                 }
@@ -259,7 +261,7 @@ void Interface<T>::fun()
                     File_txt<T> file(filename);
                     och = file.read();
                     cout << "✓ Загружено " << och.getSize() << " объектов из текстового файла" << endl;
-                } catch (const My_exception& e) {
+                } catch (const File_exception& e) {
                     cout << "✗ Ошибка при загрузке из текстового файла: ";
                     e.printError();
                 }
@@ -278,7 +280,7 @@ void Interface<T>::fun()
                     File_bin<T> file(filename);
                     och = file.read();
                     cout << "✓ Загружено " << och.getSize() << " объектов из бинарного файла" << endl;
-                } catch (const My_exception& e) {
+                } catch (const File_exception& e) {
                     cout << "✗ Ошибка при загрузке из бинарного файла: ";
                     e.printError();
                 }
@@ -291,7 +293,7 @@ void Interface<T>::fun()
             cout << "\n=== ПРОСМОТР СОДЕРЖИМОГО ФАЙЛА ===" << endl;
             cout << "Введите имя файла: ";
             getline(cin, filename);
-            if (!filename.empty()) {
+                if (!filename.empty()) {
                 try {
                     File_txt<T> file(filename);
                     file.display();
@@ -299,7 +301,7 @@ void Interface<T>::fun()
                     try {
                         File_bin<T> file(filename);
                         file.display();
-                    } catch (const My_exception& e) {
+                    } catch (const File_exception& e) {
                         cout << "✗ Ошибка при открытии файла: ";
                         e.printError();
                     }

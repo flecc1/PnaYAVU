@@ -1,9 +1,9 @@
+// Сделаем реализацию идентичной laba6.1, адаптируя для FileException
 #include "../headers/file_txt.h"
-#include "../headers/excep.h"
 #include "../headers/excep_vvoda.h"
-#include "../headers/file_exception.h"
 #include <sstream>
-#include <string>
+// file-specific exception
+#include "../headers/file_exception.h"
 
 template<class T>
 File_txt<T>::File_txt(const string& fname) : File<T>(fname) {}
@@ -13,13 +13,11 @@ void File_txt<T>::write(Ochered<T>& data) {
     try {
         ofstream out(this->filename);
         if (!out.is_open()) {
-            throw FileException(100, "FILE_OPEN_ERROR", 
-                "Не удалось открыть файл для записи", 
-                this->filename.c_str(), "write");
+            throw FileException(100, "FILE_OPEN_ERROR", "Не удалось открыть файл для записи", this->filename.c_str(), "write");
         }
         
         for (int i = 0; i < data.getSize(); i++) {
-            writeToFile(out, data[i]);
+            writeToFile(out, data[i]);  // Используем оператор для файлов
             if (i < data.getSize() - 1) {
                 out << endl;
             }
@@ -28,12 +26,8 @@ void File_txt<T>::write(Ochered<T>& data) {
         out.close();
     } catch (const FileException& e) {
         throw;
-    } catch (const My_exception& e) {
-        throw FileException(101, "FILE_WRITE_ERROR", e.getMessage(), 
-            this->filename.c_str(), "write");
     } catch (const exception& e) {
-        throw FileException(101, "FILE_WRITE_ERROR", e.what(), 
-            this->filename.c_str(), "write");
+        throw FileException(101, "FILE_WRITE_ERROR", e.what(), this->filename.c_str(), "write");
     }
 }
 
@@ -44,9 +38,7 @@ Ochered<T> File_txt<T>::read() {
         ifstream in(this->filename);
         
         if (!in.is_open()) {
-            throw FileException(102, "FILE_OPEN_ERROR", 
-                "Не удалось открыть файл для чтения", 
-                this->filename.c_str(), "read");
+            throw FileException(102, "FILE_OPEN_ERROR", "Не удалось открыть файл для чтения", this->filename.c_str(), "read");
         }
         
         // Проверяем, не пустой ли файл
@@ -76,23 +68,15 @@ Ochered<T> File_txt<T>::read() {
                 
                 // Проверяем успешность чтения
                 if (iss.fail() && !iss.eof()) {
-                    throw FileException(103, "FILE_FORMAT_ERROR", 
-                        ("Ошибка формата данных в строке " + to_string(line_num)).c_str(),
-                        this->filename.c_str(), "read");
+                    throw FileException(103, "FILE_FORMAT_ERROR", ("Ошибка формата данных в строке " + to_string(line_num)).c_str(), this->filename.c_str(), "read");
                 }
                 
                 result.pushback(obj);
             } catch (const FileException& e) {
                 // Пробрасываем исключение дальше
                 throw;
-            } catch (const My_exception& e) {
-                throw FileException(103, "FILE_READ_ERROR", 
-                    ("Ошибка в строке " + to_string(line_num) + ": " + string(e.getMessage())).c_str(),
-                    this->filename.c_str(), "read");
             } catch (...) {
-                throw FileException(103, "FILE_READ_ERROR", 
-                    ("Неизвестная ошибка в строке " + to_string(line_num)).c_str(),
-                    this->filename.c_str(), "read");
+                throw FileException(103, "FILE_READ_ERROR", ("Неизвестная ошибка в строке " + to_string(line_num)).c_str(), this->filename.c_str(), "read");
             }
         }
         
@@ -100,12 +84,8 @@ Ochered<T> File_txt<T>::read() {
         return result;
     } catch (const FileException& e) {
         throw;
-    } catch (const My_exception& e) {
-        throw FileException(104, "FILE_READ_ERROR", e.getMessage(), 
-            this->filename.c_str(), "read");
     } catch (const exception& e) {
-        throw FileException(104, "FILE_READ_ERROR", e.what(), 
-            this->filename.c_str(), "read");
+        throw FileException(104, "FILE_READ_ERROR", e.what(), this->filename.c_str(), "read");
     }
 }
 
@@ -114,9 +94,7 @@ void File_txt<T>::display() {
     try {
         ifstream in(this->filename);
         if (!in.is_open()) {
-            throw FileException(105, "FILE_OPEN_ERROR", 
-                "Не удалось открыть файл для просмотра", 
-                this->filename.c_str(), "display");
+            throw FileException(105, "FILE_OPEN_ERROR", "Не удалось открыть файл для просмотра", this->filename.c_str(), "display");
         }
         
         string line;
@@ -129,12 +107,8 @@ void File_txt<T>::display() {
         in.close();
     } catch (const FileException& e) {
         throw;
-    } catch (const My_exception& e) {
-        throw FileException(106, "FILE_DISPLAY_ERROR", e.getMessage(), 
-            this->filename.c_str(), "display");
     } catch (const exception& e) {
-        throw FileException(106, "FILE_DISPLAY_ERROR", e.what(), 
-            this->filename.c_str(), "display");
+        throw FileException(106, "FILE_DISPLAY_ERROR", e.what(), this->filename.c_str(), "display");
     }
 }
 

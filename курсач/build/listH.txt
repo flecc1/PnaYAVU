@@ -2,6 +2,7 @@
 ./headers/file_exception.h
 ./headers/excep_vvoda.h
 ./headers/LibraryItem.h
+./headers/algorithms.h
 ./headers/file.h
 ./headers/EducationalAudio.h
 ./headers/file_txt.h

@@ -30,6 +30,7 @@ public:
     string inputName(istream& in = cin) const;
     string inputSurname(istream& in = cin) const;
     string inputString(const char* prompt, istream& in = cin) const;
+    string inputFilename(const char* prompt, istream& in = cin) const;
 
     int inputNumber(istream& in, int minVal, int maxVal) const;
     double inputDouble(istream& in, double minVal, double maxVal) const;
